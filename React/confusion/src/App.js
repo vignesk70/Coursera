@@ -1,5 +1,4 @@
-import logo from './logo.svg';
-import './App.css';
+import Menu from './components/MenuComponent'
 import {Navbar, NavbarBrand} from 'reactstrap'
 
 function App() {
@@ -10,6 +9,7 @@ function App() {
           <NavbarBrand href="/">My Ristorante</NavbarBrand>
         </div>
       </Navbar>
+        <Menu />
     </div>
   );
 }
