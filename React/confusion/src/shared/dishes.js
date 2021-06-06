@@ -182,5 +182,15 @@ export const DISHES =
             date: "2011-12-02T17:57:28.556094Z"
             }
         ]
-        }
+        },
+        {
+            id: 4,
+            name:'Vig Cake',
+            image: 'assets/images/elaicheesecake.png',
+            category: 'dessert',
+            label:'',
+            price:'2.99',
+            description:'A delectable, semi-sweet New York Style Cheese Cake, with Graham cracker crust and spiced with Indian cardamoms',
+
+            }
     ];
