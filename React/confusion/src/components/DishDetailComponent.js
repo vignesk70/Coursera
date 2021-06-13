@@ -24,13 +24,13 @@ function fmtdate(commentdate) {
 
 }
 
-function RenderDish(prop) {
+function RenderDish(props) {
     return (
         <Card>
-            <CardImg top src={this.props.dish.image} alt={this.props.dish.name} />
+            <CardImg top src={props.dish.image} alt={props.dish.name} />
             <CardBody>
-                <CardTitle>{this.props.dish.name}</CardTitle>
-                <CardText>{this.props.dish.description}</CardText>
+                <CardTitle>{props.dish.name}</CardTitle>
+                <CardText>{props.dish.description}</CardText>
             </CardBody>
         </Card>
     );
@@ -43,20 +43,14 @@ function RenderComments({ comments }) {
         const values = comments.map((comment) => {
             return (
                 <div className="col-12 col-md-5 m-1">
-                    <Card>
-                        <CardBody>
-                            <CardTitle><h4>Comments</h4></CardTitle>
 
-                            <CardText>
                                 <div key={comment.id}>
                                     <ul className="list-unstyled">
                                         <li>{comment.comment}</li>
-                                        <li>--{comment.author}, {this.fmtdate(comment.date)}</li>
+                                        <li>--{comment.author}, {fmtdate(comment.date)}</li>
                                     </ul>
                                 </div>
-                            </CardText>
-                        </CardBody>
-                    </Card>
+
 
 
 
@@ -79,7 +73,7 @@ function RenderComments({ comments }) {
 
 
 const DishDetail = (props) => {
-    if (this.props.dish != null) {
+    if (props.dish != null) {
         return (
             <div className="container">
                 <div className="row">
@@ -88,7 +82,7 @@ const DishDetail = (props) => {
 
                         <RenderDish dish={props.dish} />
                     </div>
-                    {/* <div className="col-12 col-md-5 m-1">
+                    <div className="col-12 col-md-5 m-1">
                         <Card>
                             <CardBody>
                                 <CardTitle><h4>Comments</h4></CardTitle>
@@ -101,8 +95,8 @@ const DishDetail = (props) => {
 
 
 
-                    </div> */}
-                    <RenderComments comments={props.dish.comments} />
+                    </div>
+
                 </div>
             </div>
         );
