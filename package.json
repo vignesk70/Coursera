@@ -22,6 +22,7 @@
     "lite-server": "^2.6.1"
   },
   "dependencies": {
-    "create-react-app": "^4.0.3"
+    "create-react-app": "^4.0.3",
+    "react-router-dom": "^5.2.0"
   }
 }
