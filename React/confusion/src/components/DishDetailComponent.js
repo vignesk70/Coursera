@@ -1,15 +1,10 @@
 import React, { Component } from 'react'
 import {
     Card, CardImg, CardText, CardBody,
-    CardTitle, Row, Col
+    CardTitle
 } from 'reactstrap';
 
 class DishDetail extends Component {
-
-    constructor(props) {
-        super(props);
-        console.log(props)
-    }
 
     fmtdate(commentdate) {
         let date = new Date(commentdate)
@@ -24,7 +19,7 @@ class DishDetail extends Component {
             // 12 OR 24 HOURS TIME
             hour12: true
         }).format(date);
-        console.log(formatted);
+        // console.log(formatted);
         return formatted;
 
     }
