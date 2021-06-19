@@ -31,3 +31,7 @@ address{
 .navbar-dark {
     background-color: #290f9b;
 }
+
+.text-danger{
+    font-size: small;
+}
