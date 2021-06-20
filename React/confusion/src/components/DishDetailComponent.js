@@ -101,7 +101,6 @@ class CommentForm extends React.Component {
                 const errors = {};
                 const maxlength=15;
                 const minlength= 3;
-                console.log(minlength,maxlength)
                 if (!values.username) {
                   errors.username = "User Name is Required";
                 } else if (values.username.length < minlength) {
