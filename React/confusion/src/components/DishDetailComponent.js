@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import {
   Button,
   Label,
@@ -17,8 +17,9 @@ import {
 } from "reactstrap";
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Loading } from './LoadingComponent';
 
-class CommentForm extends React.Component {
+class CommentForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -33,6 +34,7 @@ class CommentForm extends React.Component {
     this.setState({ isModalOpen: !this.state.isModalOpen });
   }
   render() {
+    console.log("Props",this.dish)
     return (
       <div>
         <Button outline onClick={this.toggleModal}>
@@ -41,59 +43,11 @@ class CommentForm extends React.Component {
         <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
           <ModalHeader toggle={this.toggleModal}>Submit Comment</ModalHeader>
           <ModalBody>
-            {/* <Formik
-              initialValues={{
-                rating: "1",
-                username: "",
-                comment: "",
-              }}
-              validate={(values) => {
-                const errors = {};
-                if (!values.username) {
-                  errors.firstname = "First Name is Required";
-                } else if (values.username.length < this.minlength) {
-                  errors.username =
-                    "Must be greater than " +
-                    (this.minlength - 1) +
-                    " characters";
-                } else if (values.username.length > this.maxlength) {
-                  errors.username =
-                    "Must be less than " + this.maxlength + " characters";
-                }
 
-                return errors;
-              }}
-              onSubmit={async (values) => {
-                await new Promise((r) => setTimeout(r, 500));
-                alert(JSON.stringify(values, null, 2));
-              }}
-            >
-              {({ isSubmitting }) => (
-                <Form>
-                  <Form>
-                    <Row>
-                      <Col>
-                        <Label htmlFor="rating">Your Name</Label>
-                        <Field as="select" id="rating" name="rating">
-                          <option value="1">1</option>
-                          <option value="2">2</option>
-                        </Field>
-                      </Col>
-                    </Row>
-                    <Label htmlFor="username">Username</Label>
-                    <Field type="text" id="username" name="username"></Field>
-                    <Label htmlFor="comment">Comment</Label>
-                    <Field type="text" id="comment" name="comment"></Field>
-                  </Form>
-                  <Button color="primary" type="submit" disabled={isSubmitting}>
-                    Submit
-                  </Button>
-                </Form>
-              )}
-            </Formik> */}
             <Formik
               initialValues={{
-                username: "",
+                dishId :this.props.dishId,
+                author: "",
                 rating: "1",
                 comment: "",
               }}
@@ -101,15 +55,15 @@ class CommentForm extends React.Component {
                 const errors = {};
                 const maxlength=15;
                 const minlength= 3;
-                if (!values.username) {
-                  errors.username = "User Name is Required";
-                } else if (values.username.length < minlength) {
-                  errors.username =
+                if (!values.author) {
+                  errors.author = "User Name is Required";
+                } else if (values.author.length < minlength) {
+                  errors.author =
                     "Must be greater than " +
                     (minlength - 1) +
                     " characters";
-                } else if (values.username.length > maxlength) {
-                  errors.username =
+                } else if (values.author.length > maxlength) {
+                  errors.author =
                     "Must be less than " + maxlength + " characters";
                 }
 
@@ -118,7 +72,11 @@ class CommentForm extends React.Component {
               onSubmit={async (values) => {
                 await new Promise((r) => setTimeout(r, 500));
                 alert(JSON.stringify(values, null, 2));
+
+                this.props.addComment(this.props.dishId,values.rating,values.author,values.comment)
+
               }}
+
             >
               {({ isSubmitting }) => (
                 <Form>
@@ -136,14 +94,14 @@ class CommentForm extends React.Component {
                   </Row>
                   <Row>
 
-                    <Label htmlFor="username" md={2}>
+                    <Label htmlFor="author" md={2}>
                       Username
                     </Label>
                     {/* <Col sm={10}> */}
-                      <Field type="text" name="username" />
+                      <Field type="text" name="author" />
                       <ErrorMessage
                         className="text-danger"
-                        name="username"
+                        name="author"
                         component="div"
                       />
                     {/* </Col> */}
@@ -190,8 +148,8 @@ function fmtdate(commentdate) {
 }
 
 function RenderDish(props) {
-  console.log(props);
-  console.log(props.dish.image);
+//   console.log(props);
+//   console.log(props.dish.image);
   return (
     <Card>
       <CardImg top src={props.dish.image} alt={props.dish.name} />
@@ -203,7 +161,7 @@ function RenderDish(props) {
   );
 }
 
-function RenderComments({ comments }) {
+function RenderComments({ comments, addComment, dishId }) {
   if (comments != null) {
     // console.log(comments);
     const values = comments.map((comment) => {
@@ -227,8 +185,26 @@ function RenderComments({ comments }) {
 }
 
 const DishDetail = (props) => {
-  if (props.dish != null) {
-    console.log(props);
+  if (props.isLoading) {
+    return(
+        <div className="container">
+            <div className="row">
+                <Loading />
+            </div>
+        </div>
+    );
+}
+else if (props.errMess) {
+    return(
+        <div className="container">
+            <div className="row">
+                <h4>{props.errMess}</h4>
+            </div>
+        </div>
+    );
+}
+else if (props.dish != null)  {
+    console.log("Dishdetail: ",props);
     return (
       <div className="container">
         <div className="row">
@@ -255,8 +231,10 @@ const DishDetail = (props) => {
                 </CardTitle>
 
                 <CardText>
-                  <RenderComments comments={props.comments} />
-                  <CommentForm />
+                  <RenderComments comments={props.comments}
+                  addComment={props.addComment}
+                  dishId={props.dish.id}/>
+                  <CommentForm dishId={props.dish.id} addComment={props.addComment}/>
                 </CardText>
               </CardBody>
             </Card>
