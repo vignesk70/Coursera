@@ -10,10 +10,15 @@ import {
 import { Link } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 
-function FormSubmit() {
-  const maxlength = 15;
-  const minlength = 3;
+class FormSubmit extends Component {
+  constructor(props) {
+    super(props);
+    this.minlength=3;
+    this.maxlength=15;
+    console.log("Props",props)
+  }
 
+render(){
   return (
     <Formik
       initialValues={{
@@ -29,18 +34,18 @@ function FormSubmit() {
         const errors = {};
         if (!values.firstname) {
           errors.firstname = "First Name is Required";
-        } else if (values.firstname.length < minlength) {
+        } else if (values.firstname.length < this.minlength) {
           errors.firstname =
-            "Must be greater than " + (minlength - 1) + " characters";
-        } else if (values.firstname.length > maxlength) {
-          errors.firstname = "Must be less than " + maxlength + " characters";
+            "Must be greater than " + (this.minlength - 1) + " characters";
+        } else if (values.firstname.length > this.maxlength) {
+          errors.firstname = "Must be less than " + this.maxlength + " characters";
         }
         if (!values.lastname) {
-          errors.lastname = " Last name is required";
-        } else if (values.lastname.length < minlength) {
-          errors.lastname = "Too Short";
-        } else if (values.lastname.length > maxlength) {
-          errors.lastname = "Too long";
+          errors.lastname = "Last name is required";
+        } else if (values.lastname.length < this.minlength) {
+          errors.lastname = "Must be greater than " + (this.minlength - 1) + " characters";
+        } else if (values.lastname.length > this.maxlength) {
+          errors.lastname = "Must be less than " + this.maxlength + " characters";
         }
         if (!values.telnum) {
           errors.telnum = " Telephone number is required";
@@ -60,7 +65,15 @@ function FormSubmit() {
       onSubmit={async (values) => {
         await new Promise((r) => setTimeout(r, 500));
         alert(JSON.stringify(values, null, 2));
+        //this.handleSubmit(values)
+        this.props.postFeedback(
+          values.firstname,
+          values.lastname, values.telnum, values.email,values.agree,values.contactType,values.message
+        )
+
       }}
+
+
     >
       {({ isSubmitting }) => (
         <Form>
@@ -160,31 +173,13 @@ function FormSubmit() {
         </Form>
       )}
     </Formik>
-  );
+  );}
 }
 
 class Contact extends Component {
-  constructor(props) {
-    super(props);
-    // this.state = {
-    //   firstname: "",
-    //   lastname: "",
-    //   telnum: "",
-    //   email: "",
-    //   agree: false,
-    //   contactType: "Tel.",
-    //   message: "",
-    //   touched: {
-    //     firstname: false,
-    //     lastname: false,
-    //     telnum: false,
-    //     email: false,
-    //   },
-    // };
-    // this.handleSubmit = this.handleSubmit.bind(this);
-    // this.handleInputChange = this.handleInputChange.bind(this);
-    // this.handleBlur = this.handleBlur.bind(this);
-  }
+constructor(props) {
+  super(props);
+}
 
   handleInputChange(event) {
     const target = event.target;
@@ -195,56 +190,8 @@ class Contact extends Component {
     });
   }
 
-  // handleSubmit(event) {
-  //   console.log("Current State" + JSON.stringify(this.state));
-  //   alert("Current State" + JSON.stringify(this.state));
-  //   event.preventDefault();
-  // }
-
-  // handleBlur = (field) => (evt) => {
-  //   this.setState({
-  //     touched: { ...this.state.touched, [field]: true },
-  //   });
-  // };
-
-  // validate(firstname, lastname, telnum, email) {
-  //   const errors = {
-  //     firstname: "",
-  //     lastname: "",
-  //     telnum: "",
-  //     email: "",
-  //   };
-
-  //   if (this.state.touched.firstname && firstname.length < 3)
-  //     errors.firstname = "First Name should be more than 3 characters";
-  //   else if (this.state.touched.firstname && firstname.length > 10)
-  //     errors.firstname = "First Name should be less than 10 characters";
-
-  //   if (this.state.touched.lastname && lastname.length < 3)
-  //     errors.lastname = "Last Name should be more than 3 characters";
-  //   else if (this.state.touched.lastname && lastname.length > 10)
-  //     errors.lastname = "Last Name should be less than 10 characters";
-
-  //   const reg = /^\d+$/;
-  //   if (this.state.touched.telnum && !reg.test(telnum))
-  //     errors.telnum = "Tel num should contain only numbers";
-
-  //   if (
-  //     this.state.touched.email &&
-  //     email.split("").filter((x) => x === "@").length !== 1
-  //   )
-  //     errors.email = "Email should contain an @ sign";
-
-  //   return errors;
-  // }
-
   render() {
-    // const errors = this.validate(
-    //   this.state.firstname,
-    //   this.state.lastname,
-    //   this.state.telnum,
-    //   this.state.email
-    // );
+
     return (
       <div className="container">
         <div className="row">
@@ -314,7 +261,7 @@ class Contact extends Component {
             <h3>Send us your feedback</h3>
           </div>
           <div className="col-12 col-md-9">
-            <FormSubmit />
+            <FormSubmit  postFeedback={this.props.postFeedback}/>
           </div>
         </div>
       </div>
